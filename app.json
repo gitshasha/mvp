@@ -21,10 +21,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.senku_is_me.MVP",
+      "googleServicesFile": "./socialdev-2165b-firebase-adminsdk-l53y4-371995484d.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c872c3a9-2d89-4243-b184-d226a200b431"
+      }
     }
   }
 }
