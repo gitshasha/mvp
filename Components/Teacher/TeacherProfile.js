@@ -1,9 +1,9 @@
-import { View, Text ,StyleSheet, TouchableOpacity} from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React from "react";
 
-export default function Account() {
+export default function TeacherProfile() {
   return (
-    <View style={[styles.flexer2, { backgroundColor: "grey", flex: 1 }]}>
+    <View style={[styles.flexer2, { backgroundColor: "lightgray", height:680 }]}>
       <View style={[styles.cont1, styles.flexer2]}>
         <View
           style={{
@@ -18,21 +18,21 @@ export default function Account() {
       </View>
       <View style={[styles.cont2, styles.flexer2]}>
         <TouchableOpacity style={styles.link}>
-          <Text style={{ fontSize: 20, fontWeight: "500" }}>Classes</Text>
+          <Text style={{ fontSize: 15, fontWeight: "400",fontFamily:"" }}>Classes</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={[styles.link]}>
-          <Text style={{ fontSize: 20, fontWeight: "500" }}>Report</Text>
+          <Text style={{ fontSize: 15, fontWeight: "400" }}>Salary</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.link}>
-          <Text style={{ fontSize: 20, fontWeight: "500" }}>Attendance</Text>
+          <Text style={{ fontSize: 15, fontWeight: "400" }}>Notification</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.link}>
-          <Text style={{ fontSize: 20, fontWeight: "500" }}>Admission</Text>
+          <Text style={{ fontSize: 15, fontWeight: "400" }}>Assignment</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.link}>
-          <Text style={{ fontSize: 20, fontWeight: "500" }}>Log out</Text>
+          <Text style={{ fontSize: 15, fontWeight: "400" }}>Log out</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -52,17 +52,14 @@ const styles = StyleSheet.create({
   cont1: {
     height: 200,
     width: 330,
-    backgroundColor: "red",
   },
   cont2: {
-    height: 400,
+    height: 380,
     width: 330,
-    backgroundColor: "blue",
+    backgroundColor:"red"
   },
   link: {
     height: 50,
-    width: 330,
-    backgroundColor: "pink",
-    alignItems:"flex-start",justifyContent:"space-evenly"
+    width: 300,
   },
 });

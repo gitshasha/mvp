@@ -6,195 +6,202 @@ import {
   Image,
   ScrollView,
   ImageBackground,
+  TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useContext } from "react";
+import { UserContext } from "../../api/Userprovider";
 import { useNavigation } from "@react-navigation/native";
 import Nav from "./Nav";
 export default function StudentDashboard() {
+  const { user } = useContext(UserContext);
+  const [DashboardData, setDashboardData] = useState({});
+  
+  const [timetableinfo, settimetableinfo] = useState([]);
+   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
+  useEffect(() => {
+ const fetchDashboardData = async () => {
+   try {
+     const response = await axios.get(
+       `http://192.168.1.8:8001/api/student/getstudentclass/${user.class_id}`
+     );
+     setDashboardData(response.data);
+   } catch (error) {
+     console.error("Error fetching dashboard data:", error);
+   } finally {
+     setLoading(false);
+   }
+ };
+const gettimteble = async () => {
+await axios
+  .get(`http://192.168.1.8:8001/api/student/getclasstimetable/${user.class_id}`)
+  .then((data) => {
+    settimetableinfo(data.data);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+};
+ fetchDashboardData();
+ gettimteble();
+  }, []);
+   if (loading) {
+     return <ActivityIndicator />;
+   }
+
   const img = {
     uri: "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=826&t=st=1711365764~exp=1711366364~hmac=05b90c901280897564f9750114251b0c3061c47317562de6de51ef5102425b68",
   };
   return (
-    <ScrollView>
-      <View style={{ flex: 1, alignItems: "center" }}>
-      
-        <View style={styles.container}>
-          <View style={[styles.profile]}>
-            <ImageBackground
-              resizeMode="cover"
-              source={img}
-              style={{ flex: 1, justifyContent: "center" }}
-            />
-          </View>
-          <View style={[styles.attendance]}>
-            <Text style={{ fontSize: 18, fontWeight: "400" }}>
-              Shashank Kyadari
-            </Text>
-            <Text style={{ fontSize: 15, fontWeight: "200" }}>201144788</Text>
-            <Text style={{ fontSize: 15, fontWeight: "200" }}>
-              I-B Bhaskara
-            </Text>
-          </View>
+    <View style={{ flex: 1, alignItems: "center" }}>
+      <View style={styles.container}>
+        <View style={[styles.profile]}>
+          <ImageBackground
+            resizeMode="cover"
+            source={img}
+            style={{ flex: 1, justifyContent: "center" }}
+          />
         </View>
+        <View style={[styles.attendance]}>
+          <Text style={{ fontSize: 18, fontWeight: "400" }}>
+            {user.first_name + " " + user.last_name}
+          </Text>
+          <Text style={{ fontSize: 15, fontWeight: "200" }}>
+            {user.student_id}
+          </Text>
+          <Text style={{ fontSize: 15, fontWeight: "200" }}>
+            {DashboardData && DashboardData[0]["class_name"].slice(6)} Bhaskara
+          </Text>
+        </View>
+      </View>
 
-        <View style={[styles.info]}>
-          <View style={[styles.infobox]}>
-            <View style={[styles.infocontent]}>
-              <Text style={styles.text}>Student</Text>
-              <Text>4th year</Text>
-            </View>
-            <View style={[styles.line]}></View>
+      <View style={[styles.info]}>
+        <View style={[styles.infobox]}>
+          <View style={[styles.infocontent]}>
+            <Text style={styles.text}>Student</Text>
+            <Text>{DashboardData && DashboardData[0]["class_name"]}</Text>
           </View>
-          <View style={[styles.infobox]}>
-            <View style={[styles.infocontent]}>
-              <Text style={styles.text}>Presence</Text>
-              <Text>80%</Text>
-            </View>
-            <View style={[styles.line]}></View>
+          <View style={[styles.line]}></View>
+        </View>
+        <View style={[styles.infobox]}>
+          <View style={[styles.infocontent]}>
+            <Text style={styles.text}>Presence</Text>
+            <Text>80%</Text>
           </View>
-          <View style={[styles.infobox, { width: 70 }]}>
-            <View style={[styles.infocontent]}>
-              <Text style={styles.text}>Attended</Text>
-              <Text>80/100</Text>
-            </View>
+          <View style={[styles.line]}></View>
+        </View>
+        <View style={[styles.infobox, { width: 70 }]}>
+          <View style={[styles.infocontent]}>
+            <Text style={styles.text}>Attended</Text>
+            <Text>80/100</Text>
           </View>
         </View>
-        <View style={styles.container2}>
-          <View style={styles.circlecontainer}>
-            <Image
-              style={[styles.circle, styles.cir1, { resizeMode: "center" }]}
-              source={require("../../assets/icons8-class-51.png")}
-            />
-            <Text style={styles.text2}>Classes</Text>
-          </View>
-          <View style={styles.circlecontainer}>
-            <Image
-              style={[styles.circle, styles.cir1, { resizeMode: "center" }]}
-              source={require("../../assets/icons8-assignment-100.png")}
-            />
-            <Text style={styles.text2}>Assignment</Text>
-          </View>
-          <View style={styles.circlecontainer}>
-            <Image
-              style={[styles.circle, styles.cir1, { resizeMode: "center" }]}
-              source={require("../../assets/icons8-attendance-96.png")}
-            />
-            <Text style={styles.text2}>Attendance</Text>
-          </View>
-          <View style={styles.circlecontainer}>
-            <Image
-              style={[styles.circle, styles.cir1, { resizeMode: "center" }]}
-              source={require("../../assets/icons8-more-64.png")}
-            />
-            <Text style={styles.text2}>More</Text>
-          </View>
-        </View>
+      </View>
+      <View style={styles.container2}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Studentclasses");
+          }}
+          style={styles.circlecontainer}
+        >
+          <Image
+            style={[styles.circle, styles.cir1, { resizeMode: "center" }]}
+            source={require("../../assets/icons8-class-51.png")}
+          />
+          <Text style={styles.text2}>Classes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Assignment", { student_id: user.student_id });
+          }}
+          style={styles.circlecontainer}
+        >
+          <Image
+            style={[styles.circle, styles.cir1, { resizeMode: "center" }]}
+            source={require("../../assets/icons8-assignment-100.png")}
+          />
+          <Text style={styles.text2}>Assignment</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Studattendance",{});
+          }}
+          style={styles.circlecontainer}
+        >
+          <Image
+            style={[styles.circle, styles.cir1, { resizeMode: "center" }]}
+            source={require("../../assets/icons8-attendance-96.png")}
+          />
+          <Text style={styles.text2}>Attendance</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Feemanagement");
+          }}
+          style={styles.circlecontainer}
+        >
+          <Image
+            style={[styles.circle, styles.cir1, { resizeMode: "center" }]}
+            source={require("../../assets/icons8-more-64.png")}
+          />
+          <Text style={styles.text2}>Fee-Pay</Text>
+        </TouchableOpacity>
+      </View>
+      <ScrollView>
         <View style={styles.container3}>
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <Text style={styles.text3}>Schedule</Text>
+            <Text style={styles.text3}>Time table</Text>
             <Text style={styles.text2}>View all</Text>
           </View>
-          <View
-            style={[styles.info, { height: 110, backgroundColor: "white" }]}
-          >
-            <View
-              style={[
-                styles.infobox,
-                {
-                  height: 70,
-                  width: 80,
-                  borderRadius: 10,
 
-                  backgroundColor: "#ffd663",
-                  flexDirection: "column",
-                  justifyContent: "space-evenly",
-                },
-              ]}
-            >
-              <Text>1</Text>
-              <Text>Period</Text>
-            </View>
-            <View
-              style={[
-                styles.attendance,
-                { height: 90, justifyContent: "space-around" },
-              ]}
-            >
-              <Text style={styles.text3}>Biology Class</Text>
-              <Text style={styles.text2}>9:00-10:00</Text>
-              <Text style={styles.text2}>Rukshi</Text>
-            </View>
-          </View>
-          <View
-            style={[styles.info, { height: 110, backgroundColor: "white" }]}
-          >
-            <View
-              style={[
-                styles.infobox,
-                {
-                  height: 70,
-                  width: 80,
-                  borderRadius: 10,
+          {timetableinfo &&
+            timetableinfo.map((data, ind) => (
+              <View
+                key={ind}
+                style={[
+                  styles.info,
+                  { height: 110, backgroundColor: "white", width: 315 },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.infobox,
+                    {
+                      height: 70,
+                      width: 80,
+                      borderRadius: 10,
 
-                  backgroundColor: "#63a2ff",
-                  flexDirection: "column",
-                  justifyContent: "space-evenly",
-                },
-              ]}
-            >
-              <Text>2</Text>
-              <Text>Period</Text>
-            </View>
-            <View
-              style={[
-                styles.attendance,
-                { height: 90, justifyContent: "space-around" },
-              ]}
-            >
-              <Text style={styles.text3}>Math Class</Text>
-              <Text style={styles.text2}>10:00-11:00</Text>
-              <Text style={styles.text2}>Turumal</Text>
-            </View>
-          </View>
-          <View
-            style={[styles.info, { height: 110, backgroundColor: "white" }]}
-          >
-            <View
-              style={[
-                styles.infobox,
-                {
-                  height: 70,
-                  width: 80,
-                  borderRadius: 10,
-
-                  backgroundColor: "#6369ff",
-                  flexDirection: "column",
-                  justifyContent: "space-evenly",
-                },
-              ]}
-            >
-              <Text>3</Text>
-              <Text>Period</Text>
-            </View>
-            <View
-              style={[
-                styles.attendance,
-                { height: 90, justifyContent: "space-around" },
-              ]}
-            >
-              <Text style={styles.text3}>History Class</Text>
-              <Text style={styles.text2}>11:00-12:00</Text>
-              <Text style={styles.text2}>Saraswati</Text>
-            </View>
-          </View>
+                      backgroundColor: "#ffd663",
+                      flexDirection: "column",
+                      justifyContent: "space-evenly",
+                    },
+                  ]}
+                >
+                  <Text>{ind + 1}</Text>
+                  <Text>Period</Text>
+                </View>
+                <View
+                  style={[
+                    styles.attendance,
+                    { height: 90, justifyContent: "space-around" },
+                  ]}
+                >
+                  <Text style={styles.text3}>{data.subject_name}</Text>
+                  <Text style={styles.text2}>
+                    {data.start_time}-{data.end_time}
+                  </Text>
+                  <Text style={styles.text2}>{data.teacher_name}</Text>
+                </View>
+              </View>
+            ))}
         </View>
-        
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 const styles = StyleSheet.create({
@@ -267,9 +274,14 @@ const styles = StyleSheet.create({
 
   container3: {
     margin: 40,
-    height: 370,
-justifyContent:"space-around",
-    width: 330,
+    height: 870,
+    justifyContent: "space-around",
+    width: 315,
+  },
+  timetablecont: {
+    height: 870,
+    justifyContent: "space-around",
+    width: 315,
   },
   text: { fontSize: 15, fontWeight: "400", color: "#9e9b9b" },
   text2: { fontSize: 12, fontWeight: "500", color: "black" },

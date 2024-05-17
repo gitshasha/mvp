@@ -1,7 +1,10 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 
+import { useNavigation } from "@react-navigation/native";
 export default function Assignment() {
+  
+  const navigation = useNavigation();
   return (
     <View style={{ alignItems: "center" }}>
       <View style={styles.cont1}>
@@ -9,11 +12,11 @@ export default function Assignment() {
         <Text></Text>
       </View>
       <View style={styles.cont2}>
-        <View style={styles.eachbox}>
+        <TouchableOpacity onPress={()=>{navigation.navigate("Createquiz")}} style={styles.eachbox}>
           <Text>Quiz</Text>
-        </View>
+        </TouchableOpacity>
         <View style={styles.eachbox}>
-          <Text>PRojects</Text>
+          <Text>Homework</Text>
         </View>
         <View style={styles.eachbox}>
           <Text>Notifications</Text>

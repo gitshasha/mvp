@@ -20,13 +20,13 @@ const Salary = () => {
     return totalSalary;
   };
      const markedDates = {
-       "2024-03-25": {
+       "2024-04-03": {
          marked: true,
          dotColor: "green",
          selected: true,
          selectedColor: "green",
        }, // Example: Present on March 25, 2024
-       "2024-03-26": {
+       "2024-04-02": {
          marked: true,
          dotColor: "red",
          selected: true,
